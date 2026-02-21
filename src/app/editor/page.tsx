@@ -8,10 +8,11 @@ import { defaultSiteConfig, type SiteConfig } from "@/site.config";
 import { ConfigProvider } from "@/components/ConfigContext";
 import MobileFrame from "@/components/MobileFrame";
 import FlowController from "@/components/FlowController";
+import ImageUpload from "@/components/ImageUpload";
 import {
     Save, Share2, Eye, EyeOff, Loader2, Check, Copy, ExternalLink,
-    Type, Image as ImageIcon, MessageCircle, Gift, Puzzle, Heart,
-    ChevronDown, ChevronRight, LogOut
+    Type, MessageCircle, Gift, Puzzle, Heart,
+    ChevronDown, ChevronRight, LogOut, Sparkles
 } from "lucide-react";
 
 // Deep merge utility for partial config updates
@@ -40,19 +41,19 @@ interface EditorSectionProps {
 function EditorSection({ title, icon, children, defaultOpen = false }: EditorSectionProps) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
     return (
-        <div className="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+        <div className="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-300">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-5 py-4 flex items-center gap-3 hover:bg-rose-50/50 transition-colors text-left"
+                className="w-full px-5 py-5 flex items-center gap-3 hover:bg-rose-50/30 transition-colors text-left"
             >
-                <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 text-rose-500">
                     {icon}
                 </div>
-                <span className="font-bold text-rose-900 text-sm flex-1">{title}</span>
+                <span className="font-bold text-rose-900 text-base flex-1">{title}</span>
                 {isOpen ? (
-                    <ChevronDown className="w-4 h-4 text-rose-400" />
+                    <ChevronDown className="w-5 h-5 text-rose-300" />
                 ) : (
-                    <ChevronRight className="w-4 h-4 text-rose-400" />
+                    <ChevronRight className="w-5 h-5 text-rose-300" />
                 )}
             </button>
             <AnimatePresence>
@@ -61,10 +62,10 @@ function EditorSection({ title, icon, children, defaultOpen = false }: EditorSec
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <div className="px-5 pb-5 space-y-4 border-t border-rose-50 pt-4">
+                        <div className="px-5 pb-6 space-y-6 border-t border-rose-50 pt-5">
                             {children}
                         </div>
                     </motion.div>
@@ -75,7 +76,7 @@ function EditorSection({ title, icon, children, defaultOpen = false }: EditorSec
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-    return <label className="block text-xs font-bold text-rose-500 uppercase tracking-wider mb-1.5">{children}</label>;
+    return <label className="block text-xs font-black text-rose-400 uppercase tracking-[0.1em] mb-2">{children}</label>;
 }
 
 function TextInput({
@@ -100,7 +101,7 @@ function TextInput({
         timerRef.current = setTimeout(() => onChange(v), 300);
     };
 
-    const baseClass = "w-full px-4 py-3 bg-rose-50/50 border-2 border-rose-100 rounded-xl text-rose-900 placeholder:text-rose-300 text-sm font-medium focus:outline-none focus:border-rose-300 focus:bg-white transition-all";
+    const baseClass = "w-full px-5 py-4 bg-rose-50/40 border-2 border-rose-100/50 rounded-2xl text-rose-900 placeholder:text-rose-200 text-sm font-semibold focus:outline-none focus:border-rose-300 focus:bg-white transition-all shadow-inner-sm";
 
     if (multiline) {
         return (
@@ -108,8 +109,8 @@ function TextInput({
                 value={localValue}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={placeholder}
-                rows={3}
-                className={`${baseClass} resize-none`}
+                rows={4}
+                className={`${baseClass} resize-none leading-relaxed`}
             />
         );
     }
@@ -243,102 +244,101 @@ export default function EditorPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-rose-100 flex items-center justify-center">
+            <div className="min-h-screen bg-rose-50 flex items-center justify-center">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-center space-y-4"
                 >
-                    <Loader2 className="w-10 h-10 text-rose-400 animate-spin mx-auto" />
-                    <p className="text-rose-500 font-medium">Loading your template...</p>
+                    <div className="relative inline-block">
+                        <div className="absolute inset-0 bg-rose-200 blur-2xl opacity-40 animate-pulse" />
+                        <Loader2 className="w-12 h-12 text-rose-500 animate-spin relative z-10" />
+                    </div>
+                    <p className="text-rose-900 font-black uppercase tracking-[0.2em] text-xs">Preparing Editor</p>
                 </motion.div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-rose-100">
-            {/* Top Bar */}
-            <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-rose-100 px-4 py-3">
+        <div className="min-h-screen bg-white">
+            {/* Mobile Header */}
+            <header className="sticky top-0 z-[60] bg-white/80 backdrop-blur-xl border-b border-rose-50 px-4 py-4 sm:px-6">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <Heart className="w-5 h-5 text-rose-500 fill-rose-200" />
-                        <h1 className="font-extrabold text-rose-900 text-lg tracking-tight">Template Editor</h1>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {/* Save Status */}
-                        <div className="flex items-center gap-1.5 text-xs font-bold mr-2">
-                            {saving && (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1 text-rose-400">
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                    Saving...
-                                </motion.div>
-                            )}
-                            {saved && (
-                                <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-1 text-green-500">
-                                    <Check className="w-3.5 h-3.5" />
-                                    Saved
-                                </motion.div>
-                            )}
+                        <div className="bg-rose-50 p-2 rounded-xl">
+                            <Sparkles className="w-5 h-5 text-rose-500" />
                         </div>
-
-                        <button
-                            onClick={() => setShowPreview(!showPreview)}
-                            className="p-2.5 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors lg:hidden"
-                            title="Toggle preview"
-                        >
-                            {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-
-                        <button
-                            onClick={handleLogout}
-                            className="p-2.5 rounded-xl bg-rose-50 text-rose-400 hover:bg-rose-100 hover:text-rose-600 transition-colors"
-                            title="Logout"
-                        >
-                            <LogOut className="w-4 h-4" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 p-4 lg:p-6">
-                {/* Editor Panel */}
-                <div className={`flex-1 space-y-4 ${showPreview ? "hidden lg:block" : ""}`}>
-                    {/* Images */}
-                    <EditorSection title="Images" icon={<ImageIcon className="w-4 h-4 text-rose-500" />} defaultOpen>
-                        {["Confession Image", "Memory Lane Image", "Puzzle Image"].map((label, i) => (
-                            <div key={i}>
-                                <FieldLabel>{label}</FieldLabel>
-                                <TextInput
-                                    value={config.images[i]}
-                                    onChange={(v) => updateConfig(prev => {
-                                        const images = [...prev.images] as [string, string, string];
-                                        images[i] = v;
-                                        return { ...prev, images };
-                                    })}
-                                    placeholder="Paste image URL"
-                                />
-                                {config.images[i] && (
-                                    <div className="mt-2 rounded-xl overflow-hidden border border-rose-100 h-24">
-                                        <img src={config.images[i]} alt={label} className="w-full h-full object-cover" />
-                                    </div>
+                        <div>
+                            <h1 className="font-extrabold text-rose-900 leading-none">Customize</h1>
+                            <div className="flex items-center gap-1.5 mt-1">
+                                {saving ? (
+                                    <span className="text-[10px] font-bold text-rose-300 uppercase tracking-widest flex items-center gap-1">
+                                        <Loader2 className="w-2.5 h-2.5 animate-spin" /> Saving
+                                    </span>
+                                ) : (
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 ${saved ? "text-green-500" : "text-rose-200"}`}>
+                                        <Check className="w-2.5 h-2.5" /> {saved ? "Saved" : "Cloud Sync Ready"}
+                                    </span>
                                 )}
                             </div>
-                        ))}
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleLogout}
+                        className="p-3 bg-rose-50 rounded-2xl text-rose-400 hover:text-rose-600 active:scale-95 transition-all"
+                    >
+                        <LogOut className="w-5 h-5" />
+                    </button>
+                </div>
+            </header>
+
+            <div className="max-w-lg mx-auto pb-32">
+                <div className="p-4 sm:p-6 space-y-4">
+                    {/* Images Overhaul */}
+                    <EditorSection title="Photos" icon={<Heart className="w-5 h-5" />} defaultOpen>
+                        <ImageUpload
+                            label="Landing Photo (Hero)"
+                            value={config.images[0]}
+                            onChange={(url) => updateConfig(prev => {
+                                const images = [...prev.images] as [string, string, string];
+                                images[0] = url;
+                                return { ...prev, images };
+                            })}
+                        />
+                        <ImageUpload
+                            label="Our Memory Photo"
+                            value={config.images[1]}
+                            onChange={(url) => updateConfig(prev => {
+                                const images = [...prev.images] as [string, string, string];
+                                images[1] = url;
+                                return { ...prev, images };
+                            })}
+                        />
+                        <ImageUpload
+                            label="Puzzle Photo"
+                            value={config.images[2]}
+                            onChange={(url) => updateConfig(prev => {
+                                const images = [...prev.images] as [string, string, string];
+                                images[2] = url;
+                                return { ...prev, images };
+                            })}
+                        />
                     </EditorSection>
 
-                    {/* Hero */}
-                    <EditorSection title="Hero Section" icon={<Type className="w-4 h-4 text-rose-500" />}>
+                    {/* Intro Section */}
+                    <EditorSection title="The Hook" icon={<Type className="w-5 h-5" />}>
                         <div>
-                            <FieldLabel>Typing Text</FieldLabel>
+                            <FieldLabel>Typing Message</FieldLabel>
                             <TextInput
                                 value={config.hero.typingText}
                                 onChange={(v) => updateConfig(prev => ({ ...prev, hero: { ...prev.hero, typingText: v } }))}
-                                placeholder="I know you're mad at me right now..."
+                                placeholder="I know you're mad..."
                             />
                         </div>
                         <div>
-                            <FieldLabel>Slider Text</FieldLabel>
+                            <FieldLabel>Slider Prompt</FieldLabel>
                             <TextInput
                                 value={config.hero.sliderText}
                                 onChange={(v) => updateConfig(prev => ({ ...prev, hero: { ...prev.hero, sliderText: v } }))}
@@ -347,35 +347,37 @@ export default function EditorPage() {
                         </div>
                     </EditorSection>
 
-                    {/* Confession */}
-                    <EditorSection title="Confession" icon={<MessageCircle className="w-4 h-4 text-rose-500" />}>
+                    {/* Confession Section */}
+                    <EditorSection title="The Apology" icon={<MessageCircle className="w-5 h-5" />}>
                         <div>
-                            <FieldLabel>Confession Text</FieldLabel>
+                            <FieldLabel>Inner Heart Message</FieldLabel>
                             <TextInput
                                 value={config.confession.text}
                                 onChange={(v) => updateConfig(prev => ({ ...prev, confession: { ...prev.confession, text: v } }))}
                                 multiline
                             />
                         </div>
-                        {config.confession.reasons.map((reason: string, i: number) => (
-                            <div key={i}>
-                                <FieldLabel>Reason {i + 1}</FieldLabel>
+                        <div className="space-y-4">
+                            <p className="text-[11px] font-bold text-rose-300 uppercase tracking-widest pl-1">3 Things I&apos;m Sorry For:</p>
+                            {config.confession.reasons.map((reason: string, i: number) => (
                                 <TextInput
+                                    key={i}
                                     value={reason}
                                     onChange={(v) => updateConfig(prev => {
                                         const reasons = [...prev.confession.reasons];
                                         reasons[i] = v;
                                         return { ...prev, confession: { ...prev.confession, reasons } };
                                     })}
+                                    placeholder={`Reason ${i + 1}`}
                                 />
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </EditorSection>
 
                     {/* Memory Lane */}
-                    <EditorSection title="Memory Lane" icon={<ImageIcon className="w-4 h-4 text-rose-500" />}>
+                    <EditorSection title="Memory Lane" icon={<Heart className="w-5 h-5" />}>
                         <div>
-                            <FieldLabel>Apology Message</FieldLabel>
+                            <FieldLabel>Message for Us</FieldLabel>
                             <TextInput
                                 value={config.memoryLane.apologyMessage}
                                 onChange={(v) => updateConfig(prev => ({ ...prev, memoryLane: { apologyMessage: v } }))}
@@ -385,163 +387,166 @@ export default function EditorPage() {
                     </EditorSection>
 
                     {/* Peace Offering */}
-                    <EditorSection title="Peace Offering (Wheel)" icon={<Gift className="w-4 h-4 text-rose-500" />}>
-                        {config.peaceOffering.bribes.map((bribe: { label: string; probability: number }, i: number) => (
-                            <div key={i}>
-                                <FieldLabel>Bribe {i + 1}</FieldLabel>
+                    <EditorSection title="The Bribe" icon={<Gift className="w-5 h-5" />}>
+                        <div className="space-y-4">
+                            <p className="text-[11px] font-bold text-rose-300 uppercase tracking-widest pl-1">Wheel of Rewards (6 Options):</p>
+                            {config.peaceOffering.bribes.map((bribe: { label: string; probability: number }, i: number) => (
                                 <TextInput
+                                    key={i}
                                     value={bribe.label}
                                     onChange={(v) => updateConfig(prev => {
                                         const bribes = [...prev.peaceOffering.bribes];
                                         bribes[i] = { ...bribes[i], label: v };
                                         return { ...prev, peaceOffering: { ...prev.peaceOffering, bribes } };
                                     })}
+                                    placeholder={`Reward ${i + 1}`}
+                                />
+                            ))}
+                        </div>
+                    </EditorSection>
+
+                    {/* Verdict & WhatsApp */}
+                    <EditorSection title="The Reply" icon={<Sparkles className="w-5 h-5" />}>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <FieldLabel>Yes Button</FieldLabel>
+                                <TextInput
+                                    value={config.verdict.forgiveText}
+                                    onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, forgiveText: v } }))}
                                 />
                             </div>
-                        ))}
-                    </EditorSection>
-
-                    {/* Puzzle */}
-                    <EditorSection title="Puzzle Section" icon={<Puzzle className="w-4 h-4 text-rose-500" />}>
-                        <div>
-                            <FieldLabel>Final Plea Text</FieldLabel>
-                            <TextInput
-                                value={config.puzzle.finalPlea}
-                                onChange={(v) => updateConfig(prev => ({ ...prev, puzzle: { finalPlea: v } }))}
-                            />
-                        </div>
-                    </EditorSection>
-
-                    {/* Verdict */}
-                    <EditorSection title="Final Verdict" icon={<Heart className="w-4 h-4 text-rose-500" />}>
-                        <div>
-                            <FieldLabel>Forgive Button Text</FieldLabel>
-                            <TextInput
-                                value={config.verdict.forgiveText}
-                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, forgiveText: v } }))}
-                            />
+                            <div>
+                                <FieldLabel>No Button</FieldLabel>
+                                <TextInput
+                                    value={config.verdict.nopeText}
+                                    onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, nopeText: v } }))}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <FieldLabel>Nope Button Text</FieldLabel>
-                            <TextInput
-                                value={config.verdict.nopeText}
-                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, nopeText: v } }))}
-                            />
-                        </div>
-                        <div>
-                            <FieldLabel>WhatsApp Message</FieldLabel>
-                            <TextInput
-                                value={config.verdict.whatsappMessage}
-                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, whatsappMessage: v } }))}
-                                multiline
-                            />
-                        </div>
-                        <div>
-                            <FieldLabel>WhatsApp Number</FieldLabel>
+                            <FieldLabel>WhatsApp Number (w/ Country Code)</FieldLabel>
                             <TextInput
                                 value={config.verdict.whatsappNumber}
                                 onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, whatsappNumber: v } }))}
                                 placeholder="e.g. 919876543210"
                             />
                         </div>
+                        <div>
+                            <FieldLabel>Ready-made Text Message</FieldLabel>
+                            <TextInput
+                                value={config.verdict.whatsappMessage}
+                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, whatsappMessage: v } }))}
+                                multiline
+                            />
+                        </div>
                     </EditorSection>
 
-                    {/* Publish Section */}
-                    <div className="border-2 border-rose-200 rounded-2xl p-5 bg-white space-y-4">
-                        <h3 className="font-extrabold text-rose-900 flex items-center gap-2">
-                            <Share2 className="w-5 h-5 text-rose-500" />
-                            Publish & Share
-                        </h3>
-
+                    {/* Publish */}
+                    <div className="pt-8 px-2">
                         {!published ? (
                             <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={handlePublish}
                                 disabled={publishing}
-                                className={`w-full py-4 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-2 ${publishing
-                                    ? "bg-rose-300 cursor-not-allowed"
-                                    : "bg-rose-500 shadow-rose-200 hover:bg-rose-600"
+                                className={`w-full py-5 rounded-[2rem] font-black text-white shadow-2xl flex items-center justify-center gap-3 transition-all text-lg ${publishing
+                                        ? "bg-rose-200 cursor-not-allowed"
+                                        : "bg-rose-500 shadow-rose-200 active:bg-rose-600"
                                     }`}
                             >
-                                {publishing ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Publishing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Share2 className="w-5 h-5" />
-                                        Publish Template
-                                    </>
-                                )}
+                                {publishing ? <Loader2 className="w-6 h-6 animate-spin" /> : <Share2 className="w-6 h-6" />}
+                                {publishing ? "MAKING IT LIVE..." : "PUBLISH MY APOLOGY"}
                             </motion.button>
                         ) : (
-                            <div className="space-y-3">
-                                <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
-                                    <Check className="w-5 h-5 text-green-500" />
-                                    <span className="text-green-700 font-bold text-sm">Published!</span>
+                            <div className="space-y-4">
+                                <div className="bg-green-500 text-white p-5 rounded-[2rem] flex items-center justify-center gap-3 font-black shadow-xl shadow-green-100">
+                                    <Check className="w-6 h-6" />
+                                    LIVE & READY!
                                 </div>
 
                                 {slug && (
-                                    <div className="bg-rose-50 rounded-xl p-3 flex items-center gap-2">
-                                        <input
-                                            readOnly
-                                            value={`${typeof window !== "undefined" ? window.location.origin : ""}/view/${slug}`}
-                                            className="flex-1 bg-transparent text-rose-800 text-sm font-medium outline-none truncate"
-                                        />
-                                        <button
-                                            onClick={copyLink}
-                                            className="p-2 rounded-lg bg-white text-rose-500 hover:bg-rose-100 transition-colors"
-                                        >
-                                            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                                        </button>
-                                        <a
-                                            href={`/view/${slug}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-2 rounded-lg bg-white text-rose-500 hover:bg-rose-100 transition-colors"
-                                        >
-                                            <ExternalLink className="w-4 h-4" />
-                                        </a>
+                                    <div className="flex flex-col gap-3">
+                                        <div className="bg-rose-50 p-6 rounded-[2rem] border-2 border-rose-100 space-y-4 text-center">
+                                            <p className="text-xs font-black text-rose-400 uppercase tracking-widest leading-loose">
+                                                Your Special Link:
+                                            </p>
+                                            <p className="text-rose-900 font-bold underline decoration-2 decoration-rose-200 underline-offset-8 break-all">
+                                                {`${window.location.origin}/view/${slug}`}
+                                            </p>
+                                            <div className="flex gap-2 pt-2">
+                                                <button
+                                                    onClick={copyLink}
+                                                    className="flex-1 py-4 bg-white rounded-2xl border-2 border-rose-200 text-rose-600 font-bold flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                                >
+                                                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                                                    {copied ? "COPIED" : "COPY LINK"}
+                                                </button>
+                                                <a
+                                                    href={`/view/${slug}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-4 bg-rose-500 rounded-2xl text-white shadow-lg active:scale-95 transition-all"
+                                                >
+                                                    <ExternalLink className="w-6 h-6" />
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
-
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={handlePublish}
-                                    disabled={publishing}
-                                    className="w-full py-3 rounded-xl font-bold text-rose-500 border-2 border-rose-200 hover:bg-rose-50 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Save className="w-4 h-4" />
-                                    Update Published Version
-                                </motion.button>
                             </div>
                         )}
                     </div>
-
-                    {/* Spacer for mobile */}
-                    <div className="h-4" />
-                </div>
-
-                {/* Preview Panel */}
-                <div className={`lg:w-[420px] lg:sticky lg:top-20 lg:self-start ${showPreview ? "" : "hidden lg:block"}`}>
-                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-3 border border-rose-100 shadow-lg">
-                        <div className="flex items-center justify-between mb-3 px-2">
-                            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider">Live Preview</span>
-                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                        </div>
-                        <div className="transform scale-[0.85] origin-top -mb-[15%]">
-                            <ConfigProvider config={config}>
-                                <MobileFrame>
-                                    <FlowController />
-                                </MobileFrame>
-                            </ConfigProvider>
-                        </div>
-                    </div>
                 </div>
             </div>
+
+            {/* Mobile Bottom Bar — Preview Toggle */}
+            <div className="fixed bottom-0 left-0 right-0 p-6 z-[100] bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none">
+                <div className="max-w-md mx-auto pointer-events-auto">
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setShowPreview(!showPreview)}
+                        className="w-full py-4 bg-rose-950 text-white rounded-2xl font-black shadow-2xl flex items-center justify-center gap-3 active:bg-black transition-all group"
+                    >
+                        {showPreview ? <EyeOff className="w-5 h-5 group-hover:scale-110 transition-transform" /> : <Eye className="w-5 h-5 group-hover:scale-110 transition-transform" />}
+                        {showPreview ? "CONTINUE EDITING" : "PREVIEW TEMPLATE"}
+                    </motion.button>
+                </div>
+            </div>
+
+            {/* Preview Modal — Mobile Specific */}
+            <AnimatePresence>
+                {showPreview && (
+                    <motion.div
+                        initial={{ opacity: 0, y: "100%" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: "100%" }}
+                        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                        className="fixed inset-0 z-[110] bg-white flex flex-col lg:bg-black/80 lg:backdrop-blur-md"
+                    >
+                        <div className="flex items-center justify-between p-6 lg:text-white">
+                            <div>
+                                <h3 className="font-extrabold text-lg lg:text-white text-rose-900">Live Preview</h3>
+                                <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest mt-1">Updates in real-time</p>
+                            </div>
+                            <button
+                                onClick={() => setShowPreview(false)}
+                                className="p-3 bg-rose-50 rounded-2xl text-rose-900 lg:bg-white/10 lg:text-white font-bold"
+                            >
+                                CLOSE
+                            </button>
+                        </div>
+
+                        <div className="flex-1 flex justify-center items-center overflow-hidden">
+                            <div className="w-full h-full max-w-sm max-h-[85vh] transform scale-[0.9] lg:scale-100 origin-center">
+                                <ConfigProvider config={config}>
+                                    <MobileFrame>
+                                        <FlowController />
+                                    </MobileFrame>
+                                </ConfigProvider>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
