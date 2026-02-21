@@ -10,7 +10,7 @@ export default function Section3({ onNext }: { onNext: () => void }) {
     const [isFlipped, setIsFlipped] = useState(false);
 
     return (
-        <div className="h-full flex flex-col items-center justify-center p-8 space-y-12">
+        <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-12 min-h-[calc(100dvh-5rem)]">
             <div className="text-center space-y-3">
                 <motion.div
                     initial={{ scale: 0 }}

@@ -6,25 +6,24 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 /**
- * Uploads a file to Supabase Storage bucket 'template-assets'
- * Returns the public URL of the uploaded file
+ * Uploads a file via the /api/upload server route (uses service role key,
+ * so it bypasses Supabase Storage RLS for non-auth users).
+ * Returns the public URL of the uploaded file.
  */
 export async function uploadImage(file: File): Promise<string> {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-    const filePath = `sorry-template/${fileName}`;
+    const formData = new FormData();
+    formData.append("file", file);
 
-    const { error: uploadError } = await supabase.storage
-        .from('template-assets')
-        .upload(filePath, file);
+    const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+    });
 
-    if (uploadError) {
-        throw uploadError;
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? "Upload failed");
     }
 
-    const { data } = supabase.storage
-        .from('template-assets')
-        .getPublicUrl(filePath);
-
-    return data.publicUrl;
+    const { url } = await res.json();
+    return url as string;
 }

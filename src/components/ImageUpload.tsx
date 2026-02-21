@@ -11,7 +11,7 @@ interface ImageUploadProps {
     label: string;
 }
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function ImageUpload({ value, onChange, label }: ImageUploadProps) {
     const [uploading, setUploading] = useState(false);
@@ -25,7 +25,7 @@ export default function ImageUpload({ value, onChange, label }: ImageUploadProps
         setError(null);
 
         if (file.size > MAX_FILE_SIZE) {
-            setError("File size exceeds 2MB limit.");
+            setError("File size exceeds 5MB limit.");
             return;
         }
 
@@ -39,8 +39,9 @@ export default function ImageUpload({ value, onChange, label }: ImageUploadProps
             const url = await uploadImage(file);
             onChange(url);
         } catch (err: unknown) {
-            console.error(err);
-            setError("Failed to upload image. Please check your Supabase Storage bucket.");
+            const msg = err instanceof Error ? err.message : "Unknown error";
+            console.error("Upload error:", msg);
+            setError(`Upload failed: ${msg}`);
         } finally {
             setUploading(false);
         }
@@ -109,7 +110,7 @@ export default function ImageUpload({ value, onChange, label }: ImageUploadProps
                             {uploading ? "Uploading..." : "Click to select photo"}
                         </span>
                         <span className="text-[10px] text-rose-300 font-bold uppercase tracking-widest">
-                            Max 2MB — JPG, PNG
+                            Max 5MB — JPG, PNG, WEBP
                         </span>
                     </button>
                 )}

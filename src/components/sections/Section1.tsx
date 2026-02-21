@@ -34,7 +34,7 @@ export default function Section1({ onNext }: { onNext: () => void }) {
     };
 
     return (
-        <div className="h-full flex flex-col items-center justify-between py-16 px-8 bg-gradient-to-b from-rose-50/50 to-white">
+        <div className="flex-1 flex flex-col items-center justify-between py-16 px-8 min-h-[calc(100dvh-5rem)] bg-gradient-to-b from-rose-50/50 to-white">
             <motion.div
                 style={{ opacity, scale }}
                 className="flex flex-col items-center text-center space-y-10"

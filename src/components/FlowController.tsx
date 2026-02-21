@@ -31,7 +31,7 @@ export default function FlowController() {
     const isLastSection = currentStep === sections.length - 1;
 
     return (
-        <div className="relative h-full w-full overflow-hidden" key={flowKey}>
+        <div className="relative flex-1 flex flex-col h-full w-full overflow-hidden" key={flowKey}>
             <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                     key={currentStep}
@@ -39,7 +39,7 @@ export default function FlowController() {
                     animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
                     exit={{ opacity: 0, x: -20, scale: 1.02, filter: "blur(8px)" }}
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full w-full"
+                    className="flex-1 flex flex-col h-full w-full"
                 >
                     {isLastSection ? (
                         <CurrentSection onNext={nextStep} onRestart={restart} />

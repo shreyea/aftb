@@ -13,37 +13,39 @@ export default function MobileFrame({ children }: { children: React.ReactNode })
     const showLoginIcon = pathname === "/" || pathname.startsWith("/view/");
 
     return (
-        <div className="min-h-screen bg-rose-50 flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white min-h-[80vh] rounded-[3rem] shadow-2xl overflow-hidden relative border-8 border-rose-100 flex flex-col">
-                {/* Floating Login/Customize Icon */}
-                {showLoginIcon && (
-                    <Link
-                        href="/login"
-                        className="absolute top-8 right-6 z-50 p-2.5 bg-white/40 backdrop-blur-md rounded-2xl shadow-xl shadow-rose-200/20 border border-white/40 text-rose-500 hover:bg-rose-500 hover:text-white transition-all group active:scale-95"
-                        title="Customize this template"
-                    >
-                        <LogIn className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                    </Link>
-                )}
-
-                {/* Notch - for aesthetics */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-6 bg-rose-100 rounded-b-2xl z-50 flex items-center justify-center">
-                    <div className="w-12 h-1 bg-rose-200 rounded-full" />
-                </div>
-
-                <main className="flex-1 overflow-y-auto no-scrollbar relative pt-6">
-                    {children}
-                </main>
-
-                {/* Home Indicator */}
-                <div className="h-6 w-full flex items-center justify-center pb-2 bg-white">
-                    <div className="w-32 h-1 bg-rose-100 rounded-full" />
-                </div>
+        <div className="min-h-dvh bg-linear-to-br from-rose-50 via-white to-pink-50 flex flex-col">
+            {/* Ambient blobs */}
+            <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+                <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-rose-200/30 rounded-full blur-3xl" />
+                <div className="absolute -bottom-48 -left-48 w-[600px] h-[600px] bg-pink-200/20 rounded-full blur-3xl" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-rose-100/20 rounded-full blur-3xl" />
             </div>
 
-            <p className="mt-8 text-rose-300 text-sm font-medium tracking-wide uppercase">
-                {config.title} — Powered by Crafting Factory
-            </p>
+            {/* Floating top-right customize button */}
+            {showLoginIcon && (
+                <div className="fixed top-4 right-4 z-50">
+                    <Link
+                        href="/login"
+                        className="flex items-center gap-2 px-3 py-2 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg shadow-rose-100/40 border border-white/60 text-rose-500 hover:bg-rose-500 hover:text-white transition-all group active:scale-95 text-sm font-bold"
+                        title="Customize this template"
+                    >
+                        <LogIn className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                        <span className="hidden sm:inline">Customize</span>
+                    </Link>
+                </div>
+            )}
+
+            {/* Content area — flex-1 so it fills remaining screen height */}
+            <main className="flex-1 flex flex-col w-full">
+                {children}
+            </main>
+
+            {/* Footer */}
+            <footer className="py-4 text-center">
+                <p className="text-rose-300/70 text-xs font-medium tracking-widest uppercase">
+                    {config.title} &mdash; Powered by Crafting Factory
+                </p>
+            </footer>
         </div>
     );
 }

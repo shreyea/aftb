@@ -512,38 +512,44 @@ export default function EditorPage() {
                 </div>
             </div>
 
-            {/* Preview Modal — Mobile Specific */}
+            {/* Preview Modal — full-page PWA style */}
             <AnimatePresence>
                 {showPreview && (
                     <motion.div
-                        initial={{ opacity: 0, y: "100%" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: "100%" }}
-                        transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                        className="fixed inset-0 z-[110] bg-white flex flex-col lg:bg-black/80 lg:backdrop-blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-stretch justify-center"
                     >
-                        <div className="flex items-center justify-between p-6 lg:text-white">
-                            <div>
-                                <h3 className="font-extrabold text-lg lg:text-white text-rose-900">Live Preview</h3>
-                                <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest mt-1">Updates in real-time</p>
+                        <motion.div
+                            initial={{ y: "100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "100%" }}
+                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                            className="w-full max-w-md bg-white flex flex-col shadow-2xl overflow-hidden"
+                        >
+                            <div className="flex items-center justify-between px-5 py-3 border-b border-rose-50 bg-white shrink-0">
+                                <div>
+                                    <h3 className="font-extrabold text-rose-900 text-sm">Live Preview</h3>
+                                    <p className="text-[10px] font-bold text-rose-300 uppercase tracking-widest">Updates in real-time</p>
+                                </div>
+                                <button
+                                    onClick={() => setShowPreview(false)}
+                                    className="px-4 py-2 bg-rose-50 rounded-2xl text-rose-700 font-bold text-sm active:scale-95 transition-all"
+                                >
+                                    CLOSE
+                                </button>
                             </div>
-                            <button
-                                onClick={() => setShowPreview(false)}
-                                className="p-3 bg-rose-50 rounded-2xl text-rose-900 lg:bg-white/10 lg:text-white font-bold"
-                            >
-                                CLOSE
-                            </button>
-                        </div>
 
-                        <div className="flex-1 flex justify-center items-center overflow-hidden">
-                            <div className="w-full h-full max-w-sm max-h-[85vh] transform scale-[0.9] lg:scale-100 origin-center">
+                            <div className="flex-1 overflow-y-auto">
                                 <ConfigProvider config={config}>
                                     <MobileFrame>
                                         <FlowController />
                                     </MobileFrame>
                                 </ConfigProvider>
                             </div>
-                        </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>

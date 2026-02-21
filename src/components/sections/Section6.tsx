@@ -49,7 +49,7 @@ export default function Section6({ onRestart }: { onRestart?: () => void }) {
     return (
         <div
             ref={containerRef}
-            className="h-full flex flex-col items-center justify-center p-8 relative overflow-hidden bg-rose-50/20"
+            className="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden bg-rose-50/20 min-h-[calc(100dvh-5rem)]"
         >
             <AnimatePresence mode="wait">
                 {!isForgiven ? (

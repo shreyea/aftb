@@ -12,7 +12,7 @@ export default function Section2({ onNext }: { onNext: () => void }) {
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
     return (
-        <div className="h-full flex flex-col items-center py-8 px-6 space-y-8">
+        <div className="flex-1 flex flex-col items-center py-8 px-6 space-y-8 min-h-[calc(100dvh-5rem)] overflow-y-auto">
             <div className="text-center space-y-2">
                 <motion.h2
                     initial={{ opacity: 0, y: -10 }}

@@ -119,7 +119,7 @@ export default function Section5({ onNext }: { onNext: () => void }) {
 
     if (loading || pieceImages.length < 4) {
         return (
-            <div className="h-full flex flex-col items-center justify-center p-8 space-y-4">
+            <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-4 min-h-[calc(100dvh-5rem)]">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -132,7 +132,7 @@ export default function Section5({ onNext }: { onNext: () => void }) {
     }
 
     return (
-        <div className="h-full flex flex-col items-center justify-center px-6 py-8 space-y-6">
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 space-y-6 min-h-[calc(100dvh-5rem)]">
             {/* Header */}
             <div className="text-center space-y-2">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex justify-center">
