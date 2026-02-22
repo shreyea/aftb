@@ -30,7 +30,7 @@ export default function Section3({ onNext }: { onNext: () => void }) {
                     initial={{ y: -600, rotate: -25, opacity: 0 }}
                     animate={{
                         y: 0,
-                        rotate: isFlipped ? 180 : -5,
+                        rotate: isFlipped ? 3 : -5,
                         rotateY: isFlipped ? 180 : 0,
                         opacity: 1
                     }}
