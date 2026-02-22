@@ -11,7 +11,7 @@ interface ImageUploadProps {
     label: string;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
 export default function ImageUpload({ value, onChange, label }: ImageUploadProps) {
     const [uploading, setUploading] = useState(false);
@@ -25,7 +25,7 @@ export default function ImageUpload({ value, onChange, label }: ImageUploadProps
         setError(null);
 
         if (file.size > MAX_FILE_SIZE) {
-            setError("File size exceeds 5MB limit.");
+            setError("File size exceeds 1MB limit.");
             return;
         }
 

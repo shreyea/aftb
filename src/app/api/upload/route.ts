@@ -11,7 +11,7 @@ const supabaseAdmin = createClient(
 );
 
 const BUCKET = "template-assets";
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_SIZE = 1 * 1024 * 1024; // 1 MB
 
 /**
  * Ensures the storage bucket exists; creates it (public) if missing.
@@ -27,7 +27,7 @@ function ensureBucket(): Promise<void> {
             // Bucket doesn't exist → create it as public so getPublicUrl works
             const { error: createErr } = await supabaseAdmin.storage.createBucket(BUCKET, {
                 public: true,
-                fileSizeLimit: MAX_SIZE,
+                fileSizeLimit: MAX_SIZE, // 1 MB
                 allowedMimeTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
             });
             if (createErr) {
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         }
 
         if (file.size > MAX_SIZE) {
-            return NextResponse.json({ error: "File exceeds 5 MB limit" }, { status: 400 });
+            return NextResponse.json({ error: "File exceeds 1 MB limit" }, { status: 400 });
         }
 
         if (!file.type.startsWith("image/")) {

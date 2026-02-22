@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useConfig } from "@/components/ConfigContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -9,8 +9,14 @@ import { LogIn } from "lucide-react";
 export default function MobileFrame({ children }: { children: React.ReactNode }) {
     const config = useConfig();
     const pathname = usePathname();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const showLoginIcon = pathname === "/" || pathname.startsWith("/view/");
+    useEffect(() => {
+        const projectId = sessionStorage.getItem("sorry_project_id");
+        setIsLoggedIn(!!projectId);
+    }, [pathname]);
+
+    const showLoginIcon = pathname === "/" && !isLoggedIn;
 
     return (
         <div className="min-h-dvh bg-linear-to-br from-rose-50 via-white to-pink-50 flex flex-col">
