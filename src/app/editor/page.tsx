@@ -407,6 +407,22 @@ export default function EditorPage() {
 
                     {/* Verdict & WhatsApp */}
                     <EditorSection title="The Reply" icon={<Sparkles className="w-5 h-5" />}>
+                        <div>
+                            <FieldLabel>Final Verdict Title</FieldLabel>
+                            <TextInput
+                                value={config.verdict.title}
+                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, title: v } }))}
+                                placeholder="The Final Verdict"
+                            />
+                        </div>
+                        <div>
+                            <FieldLabel>Final Verdict Subtitle</FieldLabel>
+                            <TextInput
+                                value={config.verdict.subtitle}
+                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, subtitle: v } }))}
+                                placeholder="I've shared my heart..."
+                            />
+                        </div>
                         <div className="grid grid-cols-2 gap-3">
                             <div>
                                 <FieldLabel>Yes Button</FieldLabel>
@@ -422,6 +438,22 @@ export default function EditorPage() {
                                     onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, nopeText: v } }))}
                                 />
                             </div>
+                        </div>
+                        <div>
+                            <FieldLabel>After Forgiveness — Heading</FieldLabel>
+                            <TextInput
+                                value={config.verdict.successTitle}
+                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, successTitle: v } }))}
+                                placeholder="Best. Decision. Ever."
+                            />
+                        </div>
+                        <div>
+                            <FieldLabel>After Forgiveness — Message</FieldLabel>
+                            <TextInput
+                                value={config.verdict.successMessage}
+                                onChange={(v) => updateConfig(prev => ({ ...prev, verdict: { ...prev.verdict, successMessage: v } }))}
+                                placeholder="I promise to make every day..."
+                            />
                         </div>
                         <div>
                             <FieldLabel>WhatsApp Number (w/ Country Code)</FieldLabel>

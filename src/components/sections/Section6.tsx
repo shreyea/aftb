@@ -75,10 +75,10 @@ export default function Section6({ onRestart }: { onRestart?: () => void }) {
                             </motion.div>
                             <div className="space-y-2">
                                 <h2 className="text-3xl font-extrabold text-rose-900 tracking-tight">
-                                    The Final Verdict
+                                    {config.verdict.title}
                                 </h2>
                                 <p className="text-rose-500 font-semibold italic text-sm px-6 leading-relaxed">
-                                    &quot;I&apos;ve shared my heart, my memories, and even a bribe... what do you say?&quot;
+                                    &quot;{config.verdict.subtitle}&quot;
                                 </p>
                             </div>
                         </div>
@@ -148,10 +148,10 @@ export default function Section6({ onRestart }: { onRestart?: () => void }) {
 
                         <div className="space-y-4">
                             <h2 className="text-4xl font-extrabold text-rose-900 tracking-tight leading-none px-4">
-                                Best. Decision. Ever.
+                                {config.verdict.successTitle}
                             </h2>
                             <p className="text-rose-600 font-medium px-8 leading-relaxed">
-                                I promise to make every day as special as this one. Let&apos;s go get that prize!
+                                {config.verdict.successMessage}
                             </p>
                         </div>
 

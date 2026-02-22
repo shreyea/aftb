@@ -33,8 +33,12 @@ export const defaultSiteConfig = {
     finalPlea: "We are better together. Can we fix this?",
   },
   verdict: {
+    title: "The Final Verdict",
+    subtitle: "I've shared my heart, my memories, and even a bribe... what do you say?",
     forgiveText: "I Forgive You",
     nopeText: "Nope. Still Mad.",
+    successTitle: "Best. Decision. Ever.",
+    successMessage: "I promise to make every day as special as this one. Let's go get that prize!",
     whatsappMessage: "Fine, I forgive you. When are you taking me to get my prize?",
     whatsappNumber: "1234567890", // User should customize this
   },
