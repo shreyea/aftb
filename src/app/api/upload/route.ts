@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// Ensure we run on Node.js runtime (not Edge) for larger uploads
+export const runtime = "nodejs";
+
 // Uses service role key — bypasses RLS on storage
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,8 +13,40 @@ const supabaseAdmin = createClient(
 const BUCKET = "template-assets";
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
+/**
+ * Ensures the storage bucket exists; creates it (public) if missing.
+ * Runs once per cold start thanks to the module-level promise.
+ */
+let bucketReady: Promise<void> | null = null;
+
+function ensureBucket(): Promise<void> {
+    if (bucketReady) return bucketReady;
+    bucketReady = (async () => {
+        const { error } = await supabaseAdmin.storage.getBucket(BUCKET);
+        if (error) {
+            // Bucket doesn't exist → create it as public so getPublicUrl works
+            const { error: createErr } = await supabaseAdmin.storage.createBucket(BUCKET, {
+                public: true,
+                fileSizeLimit: MAX_SIZE,
+                allowedMimeTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+            });
+            if (createErr) {
+                console.error("Failed to create bucket:", createErr);
+                // Reset so we retry next time
+                bucketReady = null;
+                throw createErr;
+            }
+            console.log(`Created storage bucket "${BUCKET}" (public).`);
+        }
+    })();
+    return bucketReady;
+}
+
 export async function POST(req: NextRequest) {
     try {
+        // Make sure the bucket exists before attempting upload
+        await ensureBucket();
+
         const formData = await req.formData();
         const file = formData.get("file") as File | null;
 
@@ -32,7 +67,7 @@ export async function POST(req: NextRequest) {
         const filePath = `sorry-template/${fileName}`;
 
         const arrayBuffer = await file.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
+        const buffer = Buffer.from(arrayBuffer);
 
         const { error: uploadError } = await supabaseAdmin.storage
             .from(BUCKET)
@@ -51,6 +86,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ url: data.publicUrl });
     } catch (err) {
         console.error("Upload route error:", err);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        const message = err instanceof Error ? err.message : "Internal server error";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }
